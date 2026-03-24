@@ -20,6 +20,41 @@ This project demonstrates a secure cloud security foundation built with Terrafor
 - CloudWatch Log Group
 - VPC Flow Logs
 - IAM roles and policies
+- 
+## 🏗️ Architecture Overview
+This project deploys a secure AWS environment that includes a VPC with public and private subnets, NAT Gateway for outbound access, centralized logging using CloudWatch and S3, and encryption using AWS KMS. The architecture is designed with security-first principles including network segmentation, least privilege, and logging visibility.
+
+## 📊 Architecture Diagram
+
+```mermaid
+flowchart TB
+
+subgraph AWS Cloud
+    IGW[Internet Gateway]
+
+    subgraph VPC
+        PublicSubnet[Public Subnet]
+        PrivateSubnet[Private Subnet]
+
+        NAT[NAT Gateway]
+        EC2[EC2 Instance]
+    end
+
+    S3[S3 Log Bucket]
+    KMS[KMS Key]
+    CW[CloudWatch Logs]
+end
+
+IGW --> PublicSubnet
+PublicSubnet --> NAT
+NAT --> PrivateSubnet
+PrivateSubnet --> EC2
+
+EC2 --> CW
+CW --> S3
+S3 --> KMS
+```
+
 
 ## Security Controls Implemented
 - Encryption at rest using AWS KMS
