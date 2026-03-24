@@ -54,7 +54,23 @@ EC2 --> CW
 CW --> S3
 S3 --> KMS
 ```
+## 🛡️ Threat Modeling
 
+As part of this project, I documented threat scenarios using the STRIDE methodology to evaluate risks across the AWS environment. This included reviewing trust boundaries, possible attack paths, and the security controls needed to reduce exposure.
+
+### STRIDE Areas Considered
+- **Spoofing** – unauthorized identity use or role misuse
+- **Tampering** – modification of logs, routes, or infrastructure settings
+- **Repudiation** – lack of logging or audit trail visibility
+- **Information Disclosure** – exposure of logs, bucket contents, or network traffic
+- **Denial of Service** – disruption of network access or logging pipelines
+- **Elevation of Privilege** – over-permissive IAM roles or access paths
+
+### Example Security Focus
+- Protecting log storage with encryption and restricted bucket access
+- Ensuring logging services use least-privilege IAM roles
+- Segmenting workloads with public and private subnet design
+- Enforcing visibility through CloudWatch and flow logging
 
 ## Security Controls Implemented
 - Encryption at rest using AWS KMS
