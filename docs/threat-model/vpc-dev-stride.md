@@ -1,6 +1,9 @@
 # VPC Threat Model (Dev Landing Zone)
 
-## Scope
+## Overview
+This document captures the threat model for the AWS development landing zone built with Terraform. It uses the STRIDE methodology to identify threats across networking, logging, IAM, and supporting cloud security controls. The goal is to document realistic attack paths, likely impact, and the controls used to reduce risk.
+
+## In-Scope-Components
 - VPC, public/private subnets, IGW, NAT (if enabled), routing
 - VPC Flow Logs to CloudWatch Logs
 - Log bucket encrypted with KMS (S3 + KMS)
@@ -25,11 +28,11 @@
 | Spoofing | SSRF to steal instance credentials (IMDS) | Account/resource compromise | Enforce IMDSv2, least-privilege instance roles, private subnets | VPC Flow Logs + CloudTrail (later) |
 | Tampering | Route tables/SGs modified to open access | Exposure/exfiltration | Terraform + Git review, Config rules, SCPs | CloudTrail alerts on network changes |
 | Repudiation | Attacker claims changes weren’t them | Weak auditability | Centralized logs, retention | CloudTrail + log integrity controls |
-| Info Disclosure | Publicly exposed service/data path | Data leak | Private subnets, restrict SGs, S3 Public Access Block, TLS-only | VPC Flow Logs, S3 access logs (later) |
+| Information Disclosure | Publicly exposed service/data path | Data leak | Private subnets, restrict SGs, S3 Public Access Block, TLS-only | VPC Flow Logs, S3 access logs (later) |
 | DoS | Flood public endpoint, NAT saturation | Outage | Multi-AZ, WAF/Shield (later), alarms | CloudWatch metrics/alarms |
 | Elevation of Privilege | Over-permissive IAM role used by workload | Full takeover | Least privilege, permission boundaries (later) | CloudTrail IAM anomaly detections |
 
-## Notes
+## Current Staus and Next Steps
 - Current phase: baseline controls + wiring
 - Next phase: add CloudTrail, central log bucket policy hardening, detection rules, and incident runbooks
 
@@ -94,3 +97,11 @@ CloudWatch Logs → (future) Central S3 Log Bucket (KMS encrypted)
 - CloudTrail alerts on IAM policy changes, PassRole usage, new access keys
 - GuardDuty findings for unusual API calls / credential abuse
 - SIEM correlation: new policy + network change + log disable attempts
+
+## Future Improvements
+
+- Implement AWS CloudTrail for full API activity auditing (not yet integrated)
+- Enable GuardDuty for continuous threat detection across accounts
+- Add AWS Config rules for configuration monitoring and compliance
+- Build automated SIEM detection pipelines (KQL / Splunk-style correlation)
+- Extend threat modeling and controls to production environments
